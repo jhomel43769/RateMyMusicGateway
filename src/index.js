@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import proxy from 'express-http-proxy';
 import { ROUTES } from './config/routes.config.js';
+import { authenticate } from './middlewares/auth.middleware.js';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.get('/health', (req, res) => {
 ROUTES.forEach((route) => {
   app.use(
     route.path,
+    authenticate(route.requiresAuth),
     proxy(route.target, {
       proxyReqPathResolver: (req) => {
         return route.path + req.url;

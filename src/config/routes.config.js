@@ -7,7 +7,7 @@ export const ROUTES = [
     {
         path: '/api/users',
         target: process.env.USERS_SERVICE_URL,
-        requiresAuth: false,
+        requiresAuth: true,
     },
     {
         path: '/api/tracks',
