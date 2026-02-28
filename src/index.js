@@ -4,8 +4,11 @@ import cors from 'cors';
 import proxy from 'express-http-proxy';
 import { ROUTES } from './config/routes.config.js';
 import { authenticate } from './middlewares/auth.middleware.js';
+import { limiter } from './middlewares/rateLimit.middleware.js';
 
 const app = express();
+
+app.set('trust proxy', 1);
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -21,6 +24,9 @@ if (!process.env.USERS_SERVICE_URL || !process.env.MUSIC_SERVICE_URL) {
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'gateway' });
 });
+
+// Apply Rate Limiting globally for all downstream microservice routes
+app.use(limiter);
 
 // Proxy routes registration
 ROUTES.forEach((route) => {
