@@ -1,14 +1,14 @@
-# Changelog
+# Registro de Cambios (Changelog)
 
-All notable changes to this project will be documented in this file.
+Todos los cambios notables de este proyecto se documentarán en este archivo.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
+y este proyecto se adhiere a [Versionado Semántico](https://semver.org/spec/v2.0.0.html).
 
 ## [1.1.0] - 2026-02-28
-### Added
-- **RMM-201**: Initial Express Gateway setup and structure creation. Added an unrestricted `/health` configuration check.
-- **RMM-202**: Implemented dynamic proxy routing capabilities leveraging `express-http-proxy` to route endpoints to upstream `MUSIC_SERVICE` and `USERS_SERVICE`.
-- **RMM-203**: Included Centralized `jsonwebtoken`-based Authentication Middleware. Ensures unverified traffic is rejected and verifies payloads to pass `X-User-Id`, `X-User-Role`, and `X-User-Genres` downward.
-- **RMM-204**: Centralized IP Rate Limiting. Proxied traffic is subjected to strict limits (e.g. 100 max per minute) via `express-rate-limit`.
-- **RMM-205**: Standarized Central Request logging integration mapping traffic through custom HTTP formats, masking sensitive content and tracking error messages automatically by modifying Express and utilizing `morgan`.
+### Añadido
+- **RMM-201**: Configuración inicial y creación de la estructura del API Gateway con Express. Se agregó el endpoint público `/health` para chequeos de estado.
+- **RMM-202**: Implementación de rutas dinámicas mediante proxy utilizando `express-http-proxy` para enrutar el tráfico hacia `MUSIC_SERVICE` y `USERS_SERVICE`.
+- **RMM-203**: Integración del Middleware de Autenticación Centralizada basado en `jsonwebtoken`. Asegura que el tráfico no verificado sea rechazado y valida los tokens para inyectar los headers `X-User-Id`, `X-User-Role` y `X-User-Genres` hacia los microservicios.
+- **RMM-204**: Limitación de Tasa (Rate Limiting) de IP Centralizada. El tráfico del proxy está sujeto a límites estrictos (100 peticiones por minuto) mediante `express-rate-limit`.
+- **RMM-205**: Estandarización del registro (logging) centralizado de peticiones asignando el tráfico a formatos HTTP personalizados, ocultando información sensible y rastreando mensajes de error automáticamente utilizando `morgan`.
