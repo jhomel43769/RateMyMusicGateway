@@ -5,6 +5,12 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto se adhiere a [Versionado Semántico](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-03-03
+### Añadido
+- **Dockerización del Gateway**: Se agregó un `Dockerfile` optimizado (multi-stage) y `docker-compose.yml` para ejecutar el Gateway aisladamente, posibilitando la conexión nativa con microservicios hosteados en local (`host.docker.internal`).
+- **Skill de Docker**: Integración de nuevas directrices y flujos operativos de la IA para manejar e interactuar con el entorno de contenedores del proyecto usando `pnpm`.
+- **Refinamiento de Ignorados**: Agregado de `.dockerignore` y limpieza del `.gitignore` para asegurar configuraciones, credenciales y módulos de dependencias fuera del control de versiones.
+
 ## [1.1.0] - 2026-02-28
 ### Añadido
 - **RMM-201**: Configuración inicial y creación de la estructura del API Gateway con Express. Se agregó el endpoint público `/health` para chequeos de estado.

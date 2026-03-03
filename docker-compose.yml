@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: .
+      target: development
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - CI=true
+      # Overriding env vars so the container can reach host machine services
+      - USERS_SERVICE_URL=http://host.docker.internal:5197
+      - MUSIC_SERVICE_URL=http://host.docker.internal:3000
+    env_file:
+      - .env
+    volumes:
+      # Sync source code for live-reload via nodemon
+      - .:/app
+    command: sh -c "pnpm install && pnpm dev"
+    restart: unless-stopped
