@@ -10,13 +10,72 @@ services:
     environment:
       - NODE_ENV=development
       - CI=true
-      # Overriding env vars so the container can reach host machine services
-      - USERS_SERVICE_URL=http://host.docker.internal:5197
-      - MUSIC_SERVICE_URL=http://host.docker.internal:3000
+      - USERS_SERVICE_URL=http://auth:8080
+      - MUSIC_SERVICE_URL=http://media:3000
     env_file:
       - .env
     volumes:
-      # Sync source code for live-reload via nodemon
       - .:/app
     command: sh -c "pnpm install && pnpm dev"
     restart: unless-stopped
+    depends_on:
+      - auth
+      - media
+
+  auth:
+    build:
+      context: C:/Users/User/source/repos/RateMyMusicAuth
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=ratemymusic-sql-server;Database=RateMyMusicDB;User=sa;Password=Your-Strong-Passw0rd;TrustServerCertificate=True
+      - JwtConfig__SecretKey=8f7b5a22d4f3b14e9c7a0d8e2b6f1c5a9d3e8b4f701c4a2d8e9f5b3c7a1e0d4f
+    ports:
+      - "5197:8080"
+    restart: unless-stopped
+    depends_on:
+      auth-db:
+        condition: service_started
+
+  auth-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ratemymusic-sql-server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Your-Strong-Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - auth_sql_data:/var/opt/mssql
+    restart: unless-stopped
+
+  media:
+    build:
+      context: C:/Users/User/Documents/Code/RateMyMusicMedia
+      target: development
+    environment:
+      - NODE_ENV=development
+      - CI=true
+      - MONGO_URI=mongodb://media-db:27017/RateMyMusic
+    env_file:
+      - C:/Users/User/Documents/Code/RateMyMusicMedia/.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - C:/Users/User/Documents/Code/RateMyMusicMedia:/app
+    command: sh -c "pnpm install && pnpm dev"
+    restart: unless-stopped
+    depends_on:
+      - media-db
+
+  media-db:
+    image: mongo:latest
+    container_name: ratemymusic-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - media_mongo_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  auth_sql_data:
+  media_mongo_data:

@@ -11,7 +11,7 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(cors());
-app.use(express.json());
+// app.use(express.json()); // Removed to prevent express-http-proxy from hanging on POST
 
 app.use(errorCaptureMiddleware);
 app.use(logger);
@@ -32,6 +32,9 @@ ROUTES.forEach((route) => {
     route.path,
     authenticate(route.requiresAuth),
     proxy(route.target, {
+      limit: '100mb',
+      parseReqBody: false,
+      timeout: 300000, // 5 min timeout for connecting to upstream
       proxyReqPathResolver: (req) => {
         return route.path + req.url;
       },
